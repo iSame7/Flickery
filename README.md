@@ -18,31 +18,30 @@ iOS Flicker client that allow user searching for photos. Developed using Swift, 
 
 ## App Description
 
-Using this application, users will be able to browse through the Marvel library of characters. The data is available by connecting to the Marvel API http://developer.marvel.com .
+Using this application, users shall be able to search for photos with specific words. The data is available by connecting to the Flicker API https://www.flickr.com/services/api/.
 
 **App use cases**
 
-*List of Characters*:
+*List of Photos*:
 
-- In this view, you should present a list of characters loaded from the Marvel API character index. Notice that the when reaching the end of the list, if there are additional results to show, you should load and present the next page.
+- In this view, the App present a list of Photos loaded from interestingness - the list of interesting photos for the most recent day or a user-specified date from the Flicker Search API.
 
 *Filter Results*:
 
-- When tapping on the magnifier icon, you should be able to search for characters by name. To do this, use the same endpoint used to list characters and use the name param to filter results.
+- When tapping on the magnifier icon, you should be able to search for photos by name. To do this, use the flickr.photos.search endpoint used to return a list of photos matching some criteria.
 
-*Character Details*:
+*Photo Details*:
 
-- When selecting a character, you should present a detail view of that character. Most of this information is already available on the result of the first API call, except for the images to be presented on the comics/series/stories/events sections. Those images can be fetched from the resourceURI and should be lazy loaded. That same behaviour is expected when expanding those images.
-
+- When selecting a photo either from list screen or search screen, the App shall present a detail view of that photo. you can also browse all other search result photos from that details screen.
 
 ## Installation
 
 Just clone the repo or download it in zip-file, Open the project in Xcode then test it on your iOS device or iOS simulator.
 
-In case you want to change the project setup like Marvel API keys:
+In case you want to change the project setup like Flicker API keys:
 
-* Get your own keys from http://developer.marvel.com
-* Inside Marvel/Marvel/AppConstants, change `KMarvelFactory_PublicKey` and `KMarvelFactory_PrivateKey` with your owen keys.
+* Get your own keys from https://www.flickr.com/services/api/
+* Inside Marvel/Marvel/AppConstants, change `KFlickeryFactory_APIKey` with your owen key.
 
 
 # Xcode Project files structure
@@ -59,16 +58,9 @@ In case you want to change the project setup like Marvel API keys:
 |   +-- LaunchScreen.storyboard
 +-- Extensions
 |   +-- UIColor+Palette.swift
-|   +-- UIImage+Decompression.swift
-|   +-- UIImageEffects.swift
-|   +-- String+UppercaseFirst.swift
 +-- Models
-|   +-- Catalog.swift
-|   +-- Character Events
-|   +-- Character Stories
-|   +-- Charachter Series
-|   +-- CharachterComics
-|   +-- Charachter
+|   +-- RootClass.swift
+|   +-- Photo.swift
 +-- Assets
 |   +-- Assets.xcassets
 +-- Utility
@@ -79,15 +71,12 @@ In case you want to change the project setup like Marvel API keys:
 |   +-- Networking
     |   +-- Factory
         |   +-- MarvelFactory.swift
-        |   +-- MarvelFactory+Comics.swift
-        |   +-- MarvelFactory+Series.swift
-        |   +-- MarvelFactory+Story.swift
-        |   +-- MarvelFactory+Events.swift
+        |   +-- FlickerFactory+Photos.swift
     |   +-- Client
         |   +-- Networking.swift
-    |   +-- MarvelGateway.swift
+    |   +-- FlickerGateway.swift
 +-- Modules
-|   +-- List Characters
+|   +-- List Photos
     |   +-- Application Logic
         |   +-- ListInteractor.swift
         |   +-- ListInteractorIO.swift
@@ -97,7 +86,7 @@ In case you want to change the project setup like Marvel API keys:
         |   +-- Presenter
             |   +-- ListPresenter.swift
         |   +-- View
-            |   +-- ListCharactersViewController.swift
+            |   +-- ListPhotosCollectionViewController.swift
             |   +-- SlidingMenuCell.swift
             |   +-- SlidingMenuLayout.swift
             |   +-- ListViewInterface.swift
@@ -113,44 +102,19 @@ In case you want to change the project setup like Marvel API keys:
         |   +-- Presenter
             |   +-- FilterPresenter.swift
         |   +-- View
-            |   +-- FilterCharactersTableViewController.swift
+            |   +-- FilterPhotosTableViewController.swift
             |   +-- FilterTableViewCell.swift
             |   +-- FilterViewInterface.swift
         |   +-- Wireframe
-            |   +-- FilterWireframe.swift
-|   +-- Characters Details
-    |   +-- Application Logic
-        |   +-- DetailsInteractor.swift
-        |   +-- DetailsInteractorIO.swift
-    |   +-- Module Interface
-        |   +-- DetailsModuleInterface.swift
-    |   +-- User Interface
-        |   +-- Presenter
-            |   +-- DetailsPresenter.swift
-        |   +-- View
-            |   +-- Parallex Transition
-                |   +-- ParallaxTableViewController.swift
-            |   +-- MarvelHeroesDetailsTableViewController.swift
-            |   +-- CategoryRow.swift
-            |   +-- CharacterSectionCollectionViewCell.swift
-            |   +-- CharacterDetailsTopCellTableViewCell
-            |   +-- RelatedLinksTableViewCell.swift
-            |   +-- FooterReusableView.swift
-            |   +-- CounterView.swift
-            |   +-- DetailsViewInterface.swift
-        |   +-- Wireframe
-            |   +-- DetailsWireframe.swift
-            
+            |   +-- FilterWireframe.swift            
 .swift tests
-+-- MarvelAuthenticationTests.swift 
++-- FlickeryAuthenticationTests.swift 
 +-- Interactor
 |   +-- ListInteractorTests.swift
 |   +-- FilterInteractorTests.swift
-|   +-- DetailsInteractorTests.swift
 +-- Presenter
 |   +-- ListPresenterTests.swift
 |   +-- FilterPresenterTests.swift
-|   +-- DetailsPresenterTests.swift
 +-- ViewController
 |   +-- ListViewTests.swift
 ```
@@ -159,7 +123,7 @@ In case you want to change the project setup like Marvel API keys:
 
 **Common** : Contains common behavior between VIPER modules like RootWireframe, all modules wireframes use this RootWireframe.
 
-**Extensions** : Contains different Extensions like Color and image extension.
+**Extensions** : Contains Extensions like Color extension.
 
 **Models** : Contains App Model layer.
 
@@ -167,11 +131,11 @@ In case you want to change the project setup like Marvel API keys:
 
 **Utility** : Contains app utility classes like AppConstants that is a shared constant class between all classes.
 
-**Marvel Base** : Is the core engine of the project. It contain the Networking logic (Networking.swift), `MarvelGateway.swift` that is implemented to acheive the Dependency Inversion Principle between networking logic and the rest of the App. And `MarvelFactory.swift` that implement/adopt to `MarvelGateway.swift` and finally the app dealing with it to get data from te network.
+**Flicker Base** : Is the core engine of the project. It contain the Networking logic (Networking.swift), `FlickerGateway.swift` that is implemented to acheive the Dependency Inversion Principle between networking logic and the rest of the App. And `FlickerFactory.swift` that implement/adopt to `FlickerGateway.swift` and finally the app dealing with it to get data from te network.
 
 **Modules** : Contains all VIPER Architecture design patterns modules. Every module has it's owen layer/components like Interactor, Presenter, View, Entity, Routing a.k.a (Wireframe).
 
-**MarvelTests** : Contains all unit testing files like testing VIPER modules and MarvelAuthenticationTests.
+**MarvelTests** : Contains all unit testing files like testing VIPER modules and FlickeryAuthenticationTests.
 
 
 # Design Patterns used:
@@ -230,25 +194,33 @@ You can download it now:
 Use of VIPER architecture gives great possibility to apply dependency injection. For example, let’s consider an example of a presenter:
 
 ```swift
+/*
+ contains view logic for preparing content for display (as received from the Interactor) and for reacting to user inputs (by requesting new data from the Interactor).
+ */
 class ListPresenter: NSObject, ListInteractorOutput, ListModuleInterface {
-
+    
     var listInteractor : ListInteractorInput?
     var listWireframe : ListWireframe?
     var userInterface : ListViewInterface?
-
-    func updateView(limit limit: Int) {
-        listInteractor?.getCharacters(limit: limit)
+    
+    func updateView(_ limit: Int) {
+        listInteractor?.getPhotos(limit)
     }
-
-    func searchCharacters() {
+    
+    func searchPhotos() {
         listWireframe?.presentFilterInterface()
     }
-
-    func foundCharacters(characters: [Character]) {
-        if characters.count > 0 {
-            userInterface?.showCharacters(characters)
+    
+    func foundPhotos(_ photos: [Photo]) {
+        if photos.count > 0 {
+            userInterface?.showPhotos(photos)
         }
     }
+    
+    func openDetailsView(_ selectedCellIndex: Int, photos: [Photo]) {
+        listWireframe?.PresentDetailsInterface(selectedCellIndex, photos: photos)
+    }
+}
 ...
 ```
 
@@ -262,9 +234,9 @@ Injection in this class gave us two advantages:
 
 # Unit testing:
 
-I started from testing interactor and presenter, because interactor contains main business logic and presenter contains logic responsible for preparing data before displaying. These components seemed to us more critical than others.
+I started from testing interactor and presenter, because interactor contains main business logic and presenter contains logic responsible for preparing data before displaying. These components seems more critical than others.
 
-Libraries/Frameworks i used for unit tests:
+Libraries/Frameworks i used for unit tests and TDD:
 
 * XCTest
 
@@ -278,113 +250,97 @@ by separating components in our test we can focus only on testing responsibility
 How does it look like in perspective of code?
 
 ```swift
-import XCTest
-@testable import Marvel
-
 class ListPresenterTests: XCTestCase {
-
-
-    // Since there is no Mock framwork for swift like OCMock for Objective C, so for now the only way I see is to create a hand rolled mock. In swift this is a little bit less painful since you can create inner classes within a method, but still is not as handy as a mocking framework.
-
+    
+    // create a hand rolled mock. In swift this is a little bit less painful since you can create inner classes within a method, but still is not as handy as a mocking framework.
+    
     // Mock Factory class
     class ListWireframeMock: ListWireframe {
-
-        // This variable to achieve the XCTest expect method like OCMock framework expect method. 
+        
+        // This variable to achieve the XCTest expect method like OCMock framework expect method.
         var presentFilterInterfaceWasCalled = false
-
+        
         override func presentFilterInterface() {
             presentFilterInterfaceWasCalled = true
         }
-        override func PresentDetailsInterface(selectedCellIndex: Int, characters: [Marvel.Character]) {
+        override func PresentDetailsInterface(_ selectedCellIndex: Int, photos: [Photo]) {
             presentFilterInterfaceWasCalled = true
         }
     }
-
+    
     // Mock Factory class
     class ListCharactersViewControllerMock: ListViewInterface {
-
+        
         // This variable to achieve the XCTest expect method like OCMock framework expect method.
-        var showCharactersWasCalled = false
-
-        func showCharacters(characters: [Marvel.Character]) {
-            showCharactersWasCalled = true
+        var showPhotosWasCalled = false
+        
+        func showPhotos(_ photos: [Photo]) {
+            print("showPhotosWasCalled...")
+            showPhotosWasCalled = true
         }
     }
-    
+
     var sut: ListPresenter!
     var ui: ListCharactersViewControllerMock!
     var listWireframeMocked: ListWireframeMock!
     
-    var characters:[Marvel.Character] = []
+    var photos:[Photo] = []
 
     override func setUp() {
         super.setUp()
-
+        
         ui = ListCharactersViewControllerMock()
-
+        
         listWireframeMocked = ListWireframeMock()
-
+        
         sut = ListPresenter()
         sut.userInterface = ui
         sut.listWireframe = listWireframeMocked
-
-
+        
         // Parse the local test json data as Array of Character dictionaries.
-        if let characterJsonFileURL = NSBundle(forClass: self.dynamicType).URLForResource("Characters", withExtension: "json") {
+        if let characterJsonFileURL = Bundle(for: type(of: self)).url(forResource: "Interestingness", withExtension: "json") {
             XCTAssertNotNil(characterJsonFileURL)
-
-            if let data = NSData(contentsOfURL: characterJsonFileURL), langDictionary = (try? NSJSONSerialization.JSONObjectWithData(data, options: [])) as? NSDictionary{
-
+            
+            if let data = NSData(contentsOf: characterJsonFileURL), let langDictionary = (try? JSONSerialization.jsonObject(with: data as Data, options: [])) as? NSDictionary{
                 let rootClass:RootClass = RootClass(fromDictionary: langDictionary)
-                characters = rootClass.data.results
+                photos = rootClass.photos.photo
             }
             
         }
-    }
 
+    }
+    
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testSearchPhotosActionPresentsFilterUI() {
+        
+        // Test
+        sut.searchPhotos()
+        
+        // Verify
+        XCTAssertTrue(listWireframeMocked.presentFilterInterfaceWasCalled)
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
-    func testSearchCharactersActionPresentsFilterUI() {
-
+    func testFoundPhotos() {
+        
         // Test
-        sut.searchCharacters()
-
+        sut.foundPhotos(photos)
+        
         // Verify
-        XCTAssertTrue(listWireframeMocked.presentFilterInterfaceWasCalled)
+        XCTAssertTrue(ui.showPhotosWasCalled)
     }
-
-    func testFoundCharacters() {
-
-        // Test
-        sut.foundCharacters(characters)
-
-        // Verify
-        XCTAssertTrue(ui.showCharactersWasCalled)
-    }
-
+    
     func testOpenDetailsViewActionPresentsDetailsUI() {
-
+        
         // Test
-        sut.openDetailsView(1, characters: characters)
-
+        sut.openDetailsView(1, photos: photos)
+        
         // Verify
         XCTAssertTrue(listWireframeMocked.presentFilterInterfaceWasCalled)
-    }
+    }   
 }
 
 ```
