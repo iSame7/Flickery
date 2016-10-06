@@ -51,6 +51,10 @@ class ListPhotosCollectionViewController: UICollectionViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        
+        // Change status bar style to light.
+        UIApplication.shared.statusBarStyle = .lightContent
+
         self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = nil
         self.navigationController?.navigationBar.tintColor = nil
@@ -63,13 +67,7 @@ class ListPhotosCollectionViewController: UICollectionViewController {
     
     func configureView() {
         
-        // Change status bar style to light.
-        UIApplication.shared.statusBarStyle = .lightContent
-        
         self.title = "Flickery"
-        
-        // title view
-//        self.navigationItem.titleView = UIImageView(image: UIImage(named: "icn-nav-marvel"))
         
         // Navigation item image.
         if var image = UIImage(named: "icn-nav-search") {
