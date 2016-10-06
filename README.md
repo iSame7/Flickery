@@ -13,6 +13,7 @@ iOS Flicker client that allow user searching for photos. Developed using Swift, 
 
 <img src="screenshot-1.png" alt="Screenshot" width="320px"/>
 <img src="screenshot-2.png" alt="Screenshot" width="320px" />
+<img src="screenshot-3.png" alt="Screenshot" width="320px" />
 
 
 ## App Description
