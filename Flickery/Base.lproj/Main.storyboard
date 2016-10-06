@@ -84,7 +84,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cHN-Yw-zIh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-124" y="-1128"/>
+            <point key="canvasLocation" x="322" y="-1128"/>
         </scene>
         <!--List Photos Collection View Controller-->
         <scene sceneID="Og8-jq-M3k">

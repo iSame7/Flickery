@@ -79,6 +79,7 @@ class FilterPhotosTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.eventHandler?.tableViewCellSelected(indexPath.row, photos: self.photos)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
 }
