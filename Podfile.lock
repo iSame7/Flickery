@@ -1,0 +1,36 @@
+PODS:
+  - Alamofire (4.0.1)
+  - HanabiCollectionViewLayout (1.2.0)
+  - Nuke (4.1.1)
+  - SKPhotoBrowser (3.1.0)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.0)
+  - HanabiCollectionViewLayout (from `https://github.com/kshin/Hanabi`)
+  - Nuke (~> 4.0)
+  - SKPhotoBrowser (from `https://github.com/suzuki-0000/SKPhotoBrowser.git`, branch `swift3`)
+
+EXTERNAL SOURCES:
+  HanabiCollectionViewLayout:
+    :git: https://github.com/kshin/Hanabi
+  SKPhotoBrowser:
+    :branch: swift3
+    :git: https://github.com/suzuki-0000/SKPhotoBrowser.git
+
+CHECKOUT OPTIONS:
+  HanabiCollectionViewLayout:
+    :commit: 6b31f13d32c609050f99ada13a756260e3be2549
+    :git: https://github.com/kshin/Hanabi
+  SKPhotoBrowser:
+    :commit: 4dc2f9717f192885751de1db645e53fb3d7a486a
+    :git: https://github.com/suzuki-0000/SKPhotoBrowser.git
+
+SPEC CHECKSUMS:
+  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  HanabiCollectionViewLayout: 3cbcab50138345be160ce541b7bad8db6aecaa3b
+  Nuke: e334bd9834f380951237e880f084c93846fdc36c
+  SKPhotoBrowser: 48717c1e2602e6e99a5b1df9d6b43889aaa70e9f
+
+PODFILE CHECKSUM: 053e3c89ad974f6f6d01378cba148240295a1f29
+
+COCOAPODS: 1.1.0.rc.2
