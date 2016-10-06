@@ -41,7 +41,7 @@ Just clone the repo or download it in zip-file, Open the project in Xcode then t
 In case you want to change the project setup like Flicker API keys:
 
 * Get your own keys from https://www.flickr.com/services/api/
-* Inside Marvel/Marvel/AppConstants, change `KFlickeryFactory_APIKey` with your owen key.
+* Inside Flickery/Flickery/AppConstants, change `KFlickeryFactory_APIKey` with your owen key.
 
 
 # Xcode Project files structure
@@ -67,10 +67,10 @@ In case you want to change the project setup like Flicker API keys:
 |   +-- AppConstants
     |   +-- AppConstants
         |   +-- AppConstants.swift
-+-- Marvel Base
++-- Flicker Base
 |   +-- Networking
     |   +-- Factory
-        |   +-- MarvelFactory.swift
+        |   +-- FlickerFactory.swift
         |   +-- FlickerFactory+Photos.swift
     |   +-- Client
         |   +-- Networking.swift
@@ -135,7 +135,7 @@ In case you want to change the project setup like Flicker API keys:
 
 **Modules** : Contains all VIPER Architecture design patterns modules. Every module has it's owen layer/components like Interactor, Presenter, View, Entity, Routing a.k.a (Wireframe).
 
-**MarvelTests** : Contains all unit testing files like testing VIPER modules and FlickeryAuthenticationTests.
+**FlickeryTests** : Contains all unit testing files like testing VIPER modules and FlickeryAuthenticationTests.
 
 
 # Design Patterns used:
@@ -148,13 +148,13 @@ We don’t want our objects to be spooked when there’s a lot going on. So let�
 
 I used this techniqe in the network layer:
 
-The classic way to invert a dependency is to extract a protocol. (If you’re an Android developer, when you see “protocol,” think “interface.”) We’ll call it the Marvel Gateway. In the following diagram, it’s marked with <P> to show that it’s a protocol:
+The classic way to invert a dependency is to extract a protocol. (If you’re an Android developer, when you see “protocol,” think “interface.”) We’ll call it the Flicker Gateway. In the following diagram, it’s marked with <P> to show that it’s a protocol:
 
 <img src="Request-Model.png" alt="DIP" width="420px" align="middle"/>
 
 To make our API service layer more ignorant about most of the app, it has to implement the marvel gateway protocol. The prtocol act as a contract.
 Thanks to Dependency Inversion, the rest of the app can now be ignorant. It knows about the contract, but not about any class that satisfies that contract.
-Anything that implements the protocol can be plugged in. The Marvel Gateway serves as a Boundary.
+Anything that implements the protocol can be plugged in. The Flicker Gateway serves as a Boundary.
 
 You can read more about DIP [HERE](http://code.tutsplus.com/tutorials/solid-part-4-the-dependency-inversion-principle--net-36872)
 # VIPER Architecture design pattern:
