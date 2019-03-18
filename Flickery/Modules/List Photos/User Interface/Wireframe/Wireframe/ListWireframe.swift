@@ -9,14 +9,9 @@
 import UIKit
 import SKPhotoBrowser
 
-/***
- Routes from one screen to another are defined in the wireframes created by an interaction designer. In VIPER, the responsibility for Routing is shared between two objects: the Presenter, and the wireframe. A wireframe object owns the UIWindow, UINavigationController, UIViewController, etc. It is responsible for creating a View/ViewController and installing it in the window.
- */
-
 let ListViewControllerIdentifier = "ListViewController"
 
 class ListWireframe: NSObject {
-//    var detailsWireframe : DetailsWireframe?
     var filterWireframe : FilterWireframe?
     var listPresenter : ListPresenter?
     var rootWireframe : RootWireframe?
@@ -36,8 +31,6 @@ class ListWireframe: NSObject {
     }
     
     func PresentDetailsInterface(_ selectedCellIndex: Int, photos: [Photo]) {
-        
-        // 1. create URL Array
         var images = [SKPhoto]()
         for image in photos {
             
@@ -48,18 +41,16 @@ class ListWireframe: NSObject {
             
             let photo = SKPhoto.photoWithImageURL(path + ".jpg")
             photo.caption = image.title
-            photo.shouldCachePhotoURLImage = false // you can use image cache by true(NSCache)
+            photo.shouldCachePhotoURLImage = false
             images.append(photo)
         }
         
-        // 2. create PhotoBrowser Instance, and present.
-        SKPhotoBrowserOptions.enableZoomBlackArea    = true  // default true
-        SKPhotoBrowserOptions.enableSingleTapDismiss = true  // default false
-        SKPhotoBrowserOptions.bounceAnimation        = true  // default false
+        SKPhotoBrowserOptions.enableZoomBlackArea    = true
+        SKPhotoBrowserOptions.enableSingleTapDismiss = true
+        SKPhotoBrowserOptions.bounceAnimation        = true
         let browser = SKPhotoBrowser(photos: images)
         browser.initializePageIndex(selectedCellIndex)
         listViewController?.present(browser, animated: true, completion: {})
-
     }
     
     func listViewControllerFromStoryboard() -> ListPhotosCollectionViewController {

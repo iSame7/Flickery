@@ -9,7 +9,6 @@
 
 import UIKit
 
-/** Common Routing between Viper modules */
 class RootWireframe: NSObject {
     func showRootViewController(_ viewController: UIViewController, inWindow: UIWindow) {
         let navigationController = navigationControllerFromWindow(inWindow)

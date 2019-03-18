@@ -6,8 +6,7 @@
 
 import Foundation
 
-struct RootClass{
-
+struct RootClass {
 	var photos : Photo!
 	var stat : String!
 

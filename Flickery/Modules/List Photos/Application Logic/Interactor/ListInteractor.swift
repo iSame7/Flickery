@@ -8,15 +8,10 @@
 
 import Foundation
 
-
-/*
- An Interactor represents a single use case in the app. It contains the business logic to manipulate model objects (Entities) to carry out a specific task. The work done in an Interactor should be independent of any UI.
- */
 class ListInteractor: NSObject, ListInteractorInput {
     
     var output:ListInteractorOutput?
     
-    // Gateway that is our abstraction for all operation of getting data from network.
     var gateway:FlickerGateway?
 
     init<T:FlickerGateway>(flickergateway: T) {

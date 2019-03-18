@@ -9,12 +9,6 @@
 import Foundation
 
 protocol FilterModuleInterface {
-    
-    /**
-     * Add here your methods for communication PRESENTER -> VIEW
-     */
-    
     func tableViewCellSelected(_ selectedCellIndex: Int, photos: [Photo])
-    
     func updateView(_ limit: Int, name: String)
 }

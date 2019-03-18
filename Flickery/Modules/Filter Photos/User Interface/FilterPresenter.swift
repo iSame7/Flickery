@@ -9,7 +9,6 @@
 import UIKit
 
 class FilterPresenter: NSObject, ListInteractorOutput, FilterModuleInterface, UISearchControllerDelegate {
-    
     var filterInteractor : FilterInteractor?
     var filterWireframe : FilterWireframe?
     var filterModuleDelegate : FilterModuleInterface?
@@ -27,7 +26,6 @@ class FilterPresenter: NSObject, ListInteractorOutput, FilterModuleInterface, UI
     }
     
     func tableViewCellSelected(_ selectedCellIndex: Int, photos: [Photo]) {
-        // Ask wireframe to navigate to MarvelHeroesDetailsTableViewController.
         filterWireframe?.PresentDetailsInterface(selectedCellIndex, photos: photos)
     }
 }

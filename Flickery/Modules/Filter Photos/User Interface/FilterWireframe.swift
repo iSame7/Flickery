@@ -10,15 +10,9 @@ import Foundation
 import UIKit
 import SKPhotoBrowser
 
-/***
- Routes from one screen to another are defined in the wireframes created by an interaction designer. In VIPER, the responsibility for Routing is shared between two objects: the Presenter, and the wireframe. A wireframe object owns the UIWindow, UINavigationController, UIViewController, etc. It is responsible for creating a View/ViewController and installing it in the window.
- */
-
 let FilterCharactersTableViewControllerIdentifier = "FilterCharacters"
 
 class FilterWireframe: NSObject {
-    
-//    var detailsWireframe : DetailsWireframe?
     var filterPresenter : FilterPresenter?
     var listViewController : ListPhotosCollectionViewController?
     
@@ -30,25 +24,13 @@ class FilterWireframe: NSObject {
         searchResultsController.eventHandler = filterPresenter
         filterPresenter?.userInterface = searchResultsController
         
-        // Init UISearchController with the search results controller
         let searchController = UISearchController(searchResultsController: searchResultsController)
-        // Link the search controller
         searchController.searchResultsUpdater = searchResultsController
-        // This is obviously needed because the search bar will be contained in the navigation bar
         searchController.hidesNavigationBarDuringPresentation = true
-        // Required (?) to set place a search bar in a navigation bar
         searchController.searchBar.searchBarStyle = UISearchBarStyle.prominent
-        // This is where you set the search bar in the navigation bar, instead of using table view's header ...
-        //        self.navigationItem.titleView = searchController.searchBar
-        // To ensure search results controller is presented in the current view controller
-        //        searchController.definesPresentationContext = true
-        
         searchController.delegate = listViewController
         searchController.dimsBackgroundDuringPresentation = true
-        
-        // This line do the trick of diplaying UISearchController using a button action and wothout SearchBar.
         viewController.present(searchController, animated: true, completion: nil)
-        
     }
     
     func PresentDetailsInterface(_ selectedCellIndex: Int, photos: [Photo]) {
@@ -60,7 +42,6 @@ class FilterWireframe: NSObject {
             let path = "https://farm" + String(image.farm) + ".staticflickr.com/" + image.server + "/"
                 + image.id + "_"
                 + image.secret
-            
             
             let photo = SKPhoto.photoWithImageURL(path + ".jpg")
             photo.caption = image.title
