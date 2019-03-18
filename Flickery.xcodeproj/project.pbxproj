@@ -37,7 +37,6 @@
 		4BC5AE901DA507420012BE3F /* FilterWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5AE8F1DA507420012BE3F /* FilterWireframe.swift */; };
 		4BC5AE921DA507B00012BE3F /* FilterPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5AE911DA507B00012BE3F /* FilterPresenter.swift */; };
 		4BC5AE941DA507D40012BE3F /* FilterModuleInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5AE931DA507D40012BE3F /* FilterModuleInterface.swift */; };
-		4BC5AE961DA507DD0012BE3F /* FilterModuleDelegateInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5AE951DA507DD0012BE3F /* FilterModuleDelegateInterface.swift */; };
 		4BC5AE981DA5080E0012BE3F /* FilterInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5AE971DA5080E0012BE3F /* FilterInteractor.swift */; };
 		4BC5AE9A1DA508170012BE3F /* FilterInteractorIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5AE991DA508170012BE3F /* FilterInteractorIO.swift */; };
 		4BC5AE9C1DA508760012BE3F /* FilterViewInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5AE9B1DA508760012BE3F /* FilterViewInterface.swift */; };
@@ -108,7 +107,6 @@
 		4BC5AE8F1DA507420012BE3F /* FilterWireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterWireframe.swift; sourceTree = "<group>"; };
 		4BC5AE911DA507B00012BE3F /* FilterPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterPresenter.swift; sourceTree = "<group>"; };
 		4BC5AE931DA507D40012BE3F /* FilterModuleInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterModuleInterface.swift; sourceTree = "<group>"; };
-		4BC5AE951DA507DD0012BE3F /* FilterModuleDelegateInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterModuleDelegateInterface.swift; sourceTree = "<group>"; };
 		4BC5AE971DA5080E0012BE3F /* FilterInteractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterInteractor.swift; sourceTree = "<group>"; };
 		4BC5AE991DA508170012BE3F /* FilterInteractorIO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterInteractorIO.swift; sourceTree = "<group>"; };
 		4BC5AE9B1DA508760012BE3F /* FilterViewInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewInterface.swift; sourceTree = "<group>"; };
@@ -459,7 +457,6 @@
 			isa = PBXGroup;
 			children = (
 				4BC5AE931DA507D40012BE3F /* FilterModuleInterface.swift */,
-				4BC5AE951DA507DD0012BE3F /* FilterModuleDelegateInterface.swift */,
 			);
 			name = "Module Interface";
 			path = "../Filter Photos/Module Interface";
@@ -609,6 +606,7 @@
 				TargetAttributes = {
 					4BC5AE251DA4F38A0012BE3F = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = 7U7YW5472M;
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
@@ -831,7 +829,6 @@
 				4BC5AE6E1DA4FA0D0012BE3F /* UIColor+Palette.swift in Sources */,
 				4BC5AE651DA4F7EE0012BE3F /* ListPhotosCollectionViewController.swift in Sources */,
 				4BC5AE9C1DA508760012BE3F /* FilterViewInterface.swift in Sources */,
-				4BC5AE961DA507DD0012BE3F /* FilterModuleDelegateInterface.swift in Sources */,
 				4BC5AE9E1DA5087E0012BE3F /* FilterPhotosTableViewController.swift in Sources */,
 				4BC5AEAF1DA516830012BE3F /* FlickerFactory.swift in Sources */,
 				4BC5AE981DA5080E0012BE3F /* FilterInteractor.swift in Sources */,
@@ -1007,6 +1004,7 @@
 			baseConfigurationReference = 81EA36C8EA7369346CADF5FF /* Pods-Flickery.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 7U7YW5472M;
 				INFOPLIST_FILE = Flickery/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Mobiquity.Flickery;
@@ -1020,6 +1018,7 @@
 			baseConfigurationReference = AC48B7F58D4A74996B2E9D91 /* Pods-Flickery.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 7U7YW5472M;
 				INFOPLIST_FILE = Flickery/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Mobiquity.Flickery;

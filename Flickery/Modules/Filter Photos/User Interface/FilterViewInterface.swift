@@ -8,9 +8,7 @@
 
 import Foundation
 
-// Defines the public interface that something else can use to drive the user interface
 protocol FilterViewInterface {
-    
     func showCharacters(_ photos: [Photo])
     
 }

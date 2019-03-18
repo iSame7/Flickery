@@ -10,17 +10,9 @@
 import Foundation
 
 protocol FilterInteractorInput {
-    
-    /**
-     * Add here your methods for communication PRESENTER -> INTERACTOR
-     */
     func getCharacters(_ limit: Int, name: String)
 }
 
 protocol FilterInteractorOutput {
-    
-    /**
-     * Add here your methods for communication INTERACTOR -> PRESENTER
-     */
     func foundPhotos(_ characters: [Character])
 }

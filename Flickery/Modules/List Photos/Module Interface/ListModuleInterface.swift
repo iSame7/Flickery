@@ -9,10 +9,6 @@
 import Foundation
 
 protocol ListModuleInterface {
-    
-    /**
-     * Add here your methods for communication PRESENTER -> VIEW
-     */
     func updateView(_ limit: Int)
     
     func searchPhotos()

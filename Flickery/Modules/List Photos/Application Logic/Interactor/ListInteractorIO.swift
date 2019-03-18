@@ -10,17 +10,9 @@
 import Foundation
 
 protocol ListInteractorInput {
-    
-    /**
-     * Add here your methods for communication PRESENTER -> INTERACTOR
-     */
     func getPhotos(_ limit: Int)
 }
 
 protocol ListInteractorOutput {
-    
-    /**
-     * Add here your methods for communication INTERACTOR -> PRESENTER
-     */
     func foundPhotos(_ photos: [Photo])
 }

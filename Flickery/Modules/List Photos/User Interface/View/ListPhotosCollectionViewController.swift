@@ -12,28 +12,13 @@ import SKPhotoBrowser
 private let reuseIdentifier = "Cell"
 
 class ListPhotosCollectionViewController: UICollectionViewController {
-
-    
-    // RightBarButton
     var rightBarButton: UIBarButtonItem?
-    
-    // array of photos.
     var photos = [Photo]()
-    
     // limit that manges marvel number of resources loaded per request.
     var limit = KFlickerResourcesLimit
-    
-    // Event handler or Presenter
     var eventHandler:ListModuleInterface?
-    
     var strongCollectionView: UICollectionView?
-    
-    /*
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
-    }
- */
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -66,8 +51,7 @@ class ListPhotosCollectionViewController: UICollectionViewController {
     }
     
     func configureView() {
-        
-        self.title = "Flickery"
+        title = "Flickery"
         
         // Navigation item image.
         if var image = UIImage(named: "icn-nav-search") {
@@ -77,7 +61,6 @@ class ListPhotosCollectionViewController: UICollectionViewController {
             self.navigationItem.rightBarButtonItem = rightBarButton
         }
         
-        // background
         collectionView!.backgroundColor = UIColor.colorFromRGB(39, g: 43, b: 47)
         collectionView!.decelerationRate = UIScrollViewDecelerationRateFast
         
@@ -121,14 +104,8 @@ extension ListPhotosCollectionViewController {
         print("cellForItemAt..here")
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SlidingMenuCell", for: indexPath) as! SlidingMenuCell
         cell.photo = photos[indexPath.item]
-//        
         if (indexPath.row == self.photos.count - 1) {
-            
-            // scrolling indicator at last item.
-            
-            // Increase resources limit.
             limit = limit + KFlickerResourcesLimit
-            
             eventHandler?.updateView(limit)
         }
         
@@ -139,11 +116,9 @@ extension ListPhotosCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         eventHandler?.openDetailsView(indexPath.item, photos: self.photos)
     }
-    
 }
 
 extension ListPhotosCollectionViewController: UISearchControllerDelegate {
-    
     func didDismissSearchController(_ searchController: UISearchController) {
         self.navigationItem.titleView?.isHidden = false
         self.navigationItem.rightBarButtonItem = rightBarButton

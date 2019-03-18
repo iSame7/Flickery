@@ -10,32 +10,15 @@ import Foundation
 
 import Alamofire
 
-/**
- * Our Networking class
- */
 final class Networking {
-    
-    // SharedInstance
     static let sharedInstance:Networking = Networking()
 }
 
-
-enum Router: URLRequestConvertible{
-    
-    
+enum Router: URLRequestConvertible {
     static let baseURLString = kFlickerAPIClient_BaseURL
 
     case filterPhotos(endpoint:String, text:String, limit:String , urlParams:(String, String, String))
     case getInterestingness(endpoint:String, limit:String , urlParams:(String, String, String))
-
-/*
-    var path: String {
-        switch self {
-        case .filterPhotos(let endpoint, _, _, (_, _, _)):
-            return endpoint
-        }
-    }
- */
     
     var method: HTTPMethod {
         switch self {
@@ -63,12 +46,7 @@ enum Router: URLRequestConvertible{
             return params as [String : AnyObject]?
         }
     }
-    
-/// Returns a URL request or throws if an `Error` was encountered.
-    ///
-    /// - throws: An `Error` if the underlying `URLRequest` is `nil`.
-    ///
-    /// - returns: A URL request.
+
     func asURLRequest() throws -> URLRequest {
         let url = try Router.baseURLString.asURL()
         

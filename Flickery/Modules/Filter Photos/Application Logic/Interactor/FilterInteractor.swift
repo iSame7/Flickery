@@ -12,14 +12,11 @@ class FilterInteractor: NSObject, FilterInteractorInput {
     
     var output: ListInteractorOutput?
     
-    // Gateway that is our abstraction for all operation of getting data from network.
     var gateway:FlickerGateway?
-//
+
     init<T:FlickerGateway>(flickerGateway: T) {
         self.gateway = flickerGateway
     }
-    
-    // MARK: - ListInteractorInput implementation
     
     func getCharacters(_ limit: Int, name: String) {
     
@@ -28,7 +25,5 @@ class FilterInteractor: NSObject, FilterInteractorInput {
         }) { (error) -> Void in
         }
  
-    }
-
-    
+    } 
 }

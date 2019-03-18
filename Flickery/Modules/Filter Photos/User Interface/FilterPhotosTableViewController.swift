@@ -10,20 +10,11 @@ import UIKit
 import SKPhotoBrowser
 
 class FilterPhotosTableViewController: UITableViewController {
-    
     var eventHandler : FilterModuleInterface?
-    
-    
-    // limit that manges marvel number of resources loaded per request.
     var limit = KFlickerResourcesLimit
-    
-    // array of characters.
     var photos = [Photo]()
-    
     var searchText: String?
-    
     var downloading: Bool?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +32,6 @@ class FilterPhotosTableViewController: UITableViewController {
         
     }
     func configureView() {
-        
-        // tableView background
         tableView.backgroundColor = UIColor.colorFromRGB(39, g: 43, b: 47)
         
         /*
@@ -69,7 +58,6 @@ class FilterPhotosTableViewController: UITableViewController {
         
         let lastElement = self.photos.count - 1
         if indexPath.row == lastElement {
-            // handle your logic here to get more items, add it to dataSource and reload tableview
             limit = limit + KFlickerResourcesLimit
             self.eventHandler?.updateView(limit, name: self.searchText!)
         }

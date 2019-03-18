@@ -24,22 +24,13 @@ class AppDependencies {
     
     func configureDependencies() {
         let rootWireframe = RootWireframe()
-//
         let listPresenter = ListPresenter()
         let listInteractor = ListInteractor(flickergateway: flickerFactory)
-//
         let filterWireframe = FilterWireframe()
         let filterInteractor = FilterInteractor(flickerGateway: flickerFactory)
         let filterPresenter = FilterPresenter()
-//
-//        let detailsWireframe = DetailsWireframe()
-//        let detailsInteractor = DetailsInteractor(marvelgateway: marvelFactory)
-//        let detailsPresenter = DetailsPresenter()
-        
+
         /* List Module configurations */
-        
-        
-        
         listInteractor.output = listPresenter
         
         listPresenter.listInteractor = listInteractor
@@ -48,28 +39,11 @@ class AppDependencies {
         listWireframe.filterWireframe = filterWireframe
         listWireframe.listPresenter = listPresenter
         listWireframe.rootWireframe = rootWireframe
-//        listWireframe.detailsWireframe = detailsWireframe
         
         /* Filter Module configurations */
-        
         filterInteractor.output = filterPresenter
-        
         filterWireframe.filterPresenter = filterPresenter
-//        filterWireframe.detailsWireframe = detailsWireframe
-        
         filterPresenter.filterWireframe = filterWireframe
         filterPresenter.filterInteractor = filterInteractor
-        /*
-        /* Details Module configurations */
-        
-        detailsInteractor.output = detailsPresenter
-        
-        detailsWireframe.detailsPresenter = detailsPresenter
-        
-        detailsPresenter.detailsInteractor = detailsInteractor
-        detailsPresenter.detialsWireframe = detailsWireframe
- */
-        
-        
     }
 }

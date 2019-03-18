@@ -6,23 +6,22 @@
 
 import Foundation
 
-struct Photo{
-
-	var farm : Int!
-	var id : String!
-	var isfamily : Int!
-	var isfriend : Int!
-	var ispublic : Int!
-	var owner : String!
-	var secret : String!
-	var server : String!
-	var title : String!
-	var page : Int!
-	var pages : Int!
-	var perpage : Int!
-	var photo : [Photo]!
-	var total : String!
-    var url : String?
+struct Photo {
+	let farm : Int!
+	let id : String!
+	let isfamily : Int!
+	let isfriend : Int!
+	let ispublic : Int!
+	let owner : String!
+	let secret : String!
+	let server : String!
+	let title : String!
+	let page : Int!
+	let pages : Int!
+	let perpage : Int!
+	let photo : [Photo]!
+	let total : String!
+    let url : String? = nil
 
 
 	/**
@@ -49,21 +48,6 @@ struct Photo{
 			}
 		}
 		total = dictionary["total"] as? String
-        
-        /*
-        print("All Photos \(dictionary["photo"] as? [NSDictionary])")
-        
-        
-        if let photoURLS = dictionary["photo"] as? [NSDictionary] {
-            if let urlArr = photoURLS["url"] as? [NSDictionary] {
-                print("All URLARR \(urlArr)")
-                
-                for dic in urlArr{
-                    self.url = (dic["_content"] as? String)!
-            }
-        }
-	}
-        */
 }
 
 	/**
