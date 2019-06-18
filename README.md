@@ -183,10 +183,8 @@ VIPER is an application of Clean Architecture to iOS apps. The word VIPER is a b
 
 If you really want to make your application based on VIPER architecture, do not even think to make it all manually. It will be a disaster! You need an automated process to create a new module.
 
-By the way I've created an opens source tool that automate the process of generating VIPER modules. A simple OS X App for generating VIPER modules's skeleton to use them in your Objective-C/Swift projects.
-You can download it now:
-
-* [ViperCode](https://github.com/iSame7/ViperCode)
+By the way I've created an opens source tool that automate the process of generating VIPER modules.
+* [ViperCode](https://github.com/iSame7/VIPER-Module)
 
 
 # Dependency Injection:
@@ -194,34 +192,50 @@ You can download it now:
 Use of VIPER architecture gives great possibility to apply dependency injection. For example, let’s consider an example of a presenter:
 
 ```swift
-/*
- contains view logic for preparing content for display (as received from the Interactor) and for reacting to user inputs (by requesting new data from the Interactor).
- */
-class ListPresenter: NSObject, ListInteractorOutput, ListModuleInterface {
+class MapPresenter: MapPresenting {
+    private weak var view: MapViewable?
+    private let mapInteractor: MapInteracting
+    private let router: MapRoutable
     
-    var listInteractor : ListInteractorInput?
-    var listWireframe : ListWireframe?
-    var userInterface : ListViewInterface?
-    
-    func updateView(_ limit: Int) {
-        listInteractor?.getPhotos(limit)
+    init(view: MapViewable?, mapInteractor: MapInteracting, router: MapRoutable) {
+        self.view = view
+        self.mapInteractor = mapInteractor
+        self.router = router
     }
     
-    func searchPhotos() {
-        listWireframe?.presentFilterInterface()
-    }
-    
-    func foundPhotos(_ photos: [Photo]) {
-        if photos.count > 0 {
-            userInterface?.showPhotos(photos)
+    func viewDidLoad() {
+        mapInteractor.determineUserLocation { [weak self] location in
+            self?.view?.updateUserLocation(MapViewController.LocationViewModel(lat: location.lat, lng: location.lng))
         }
     }
     
-    func openDetailsView(_ selectedCellIndex: Int, photos: [Photo]) {
-        listWireframe?.PresentDetailsInterface(selectedCellIndex, photos: photos)
+    func getRestaurantsAround(coordinate: String) {
+        mapInteractor.getRestaurantsAround(coordinate: coordinate) { [weak self] (venues, error) in
+            if let venues = venues {
+                self?.view?.update(venues)
+            } else if let error = error {
+                self?.view?.showError(error: error)
+            }
+        }
+    }
+    
+    func getPhotos(venueId: String) {
+        mapInteractor.getVenuePhotos(venueId: venueId) { [weak self] photos in
+            print("Photos: \(photos)")
+            if !photos.isEmpty {
+                let photo = "\(photos[0].prefix)700x500\(photos[0].suffix)"
+                self?.view?.update(with: photo, for: venueId)
+            }
+
+        }
+    }
+    
+    func showDetailsViewController(venue: Venue, venuePhotoURL: String?) {
+        guard let vmapViewController = view as? UIViewController else { return }
+        
+        router.navigateToDetailsModule(navController: vmapViewController.navigationController, venue: venue, venuePhotoURL: venuePhotoURL)
     }
 }
-...
 ```
 
 Injection in this class gave us two advantages:
@@ -229,7 +243,7 @@ Injection in this class gave us two advantages:
 * We have a better sense what’s going on in this code. We see immediately what dependencies our class has
 * On the other hand, our class is prepared for unit testing
 
-*When using VIPER architecture a good practice is to use DI in every component. We will show in Unit Test section a few examples how this approach can really help us during testing.
+*When using VIPER architecture a good practice is to use DI in every component. i will show in Unit Test section a few examples how this approach can really help us during testing.
 
 
 # Unit testing:
@@ -250,97 +264,120 @@ by separating components in our test we can focus only on testing responsibility
 How does it look like in perspective of code?
 
 ```swift
-class ListPresenterTests: XCTestCase {
+class MapPresenterTests: XCTestCase {
+    // MARK: - Test variables
+    private let mockMapViewController = MockMapViewController()
+    private let mockMapInteractor = MockMapInteractor()
+    private let mockDetailsModuleBuilder = MockDetailsBuilder()
+    private let mockNavigationController = MockNavigationController()
+    private var mockRouter = MockRouter()
+    private var sut: MapPresenter?
     
-    // create a hand rolled mock. In swift this is a little bit less painful since you can create inner classes within a method, but still is not as handy as a mocking framework.
+    private let mockVenue = Venue(id: "123", name: "Restaurant A", contact: nil, location: Location(lat: 52.36795609763071, lng: 4.895555168247901, address: "Nieuwe Doelenstraat 20-22", crossStreet: nil, distance: nil, postalCode: "1012 CP", cc: nil, city: "Amsterdam", state: "North Holland", country: "Netherlands"), categories: [Category(id: "4bf58dd8d48988d16d941735", name: "Café", pluralName: "Cafés", shortName: "Café", icon: Category.Icon(prefix: "https://ss3.4sqi.net/img/categories_v2/food/cafe_", suffix: ".png"), primary: nil)], verified: false, url: nil, stats: nil, likes: nil, rating: nil, hours: nil, photos: nil, tips: nil)
     
-    // Mock Factory class
-    class ListWireframeMock: ListWireframe {
-        
-        // This variable to achieve the XCTest expect method like OCMock framework expect method.
-        var presentFilterInterfaceWasCalled = false
-        
-        override func presentFilterInterface() {
-            presentFilterInterfaceWasCalled = true
-        }
-        override func PresentDetailsInterface(_ selectedCellIndex: Int, photos: [Photo]) {
-            presentFilterInterfaceWasCalled = true
-        }
-    }
-    
-    // Mock Factory class
-    class ListCharactersViewControllerMock: ListViewInterface {
-        
-        // This variable to achieve the XCTest expect method like OCMock framework expect method.
-        var showPhotosWasCalled = false
-        
-        func showPhotos(_ photos: [Photo]) {
-            print("showPhotosWasCalled...")
-            showPhotosWasCalled = true
-        }
-    }
-
-    var sut: ListPresenter!
-    var ui: ListCharactersViewControllerMock!
-    var listWireframeMocked: ListWireframeMock!
-    
-    var photos:[Photo] = []
-
+    // MARK: - Test life cycle
     override func setUp() {
-        super.setUp()
-        
-        ui = ListCharactersViewControllerMock()
-        
-        listWireframeMocked = ListWireframeMock()
-        
-        sut = ListPresenter()
-        sut.userInterface = ui
-        sut.listWireframe = listWireframeMocked
-        
-        // Parse the local test json data as Array of Character dictionaries.
-        if let characterJsonFileURL = Bundle(for: type(of: self)).url(forResource: "Interestingness", withExtension: "json") {
-            XCTAssertNotNil(characterJsonFileURL)
-            
-            if let data = NSData(contentsOf: characterJsonFileURL), let langDictionary = (try? JSONSerialization.jsonObject(with: data as Data, options: [])) as? NSDictionary{
-                let rootClass:RootClass = RootClass(fromDictionary: langDictionary)
-                photos = rootClass.photos.photo
-            }
-            
-        }
-
+        sut = MapPresenter(view: mockMapViewController, mapInteractor: mockMapInteractor, router: mockRouter)
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    // MARK: - Tests
+    func testIsMapViewLoaded() {
+        sut?.viewDidLoad()
+        
+        XCTAssertNotNil(mockMapViewController.locationViewModel)
+        XCTAssertEqual(mockMapViewController.locationViewModel.lat, 52.36795609763071)
+        XCTAssertEqual(mockMapViewController.locationViewModel.lng, 4.895555168247901)
     }
     
-    func testSearchPhotosActionPresentsFilterUI() {
-        
-        // Test
-        sut.searchPhotos()
-        
-        // Verify
-        XCTAssertTrue(listWireframeMocked.presentFilterInterfaceWasCalled)
+    func testGetRestaurantsArountCoordinate() {
+        sut?.getRestaurantsAround(coordinate: "52.362305405787325,4.8999109843211")
+        XCTAssertNotNil(mockMapViewController.venues)
+        XCTAssertEqual(mockMapViewController.venues.count, 2)
+        XCTAssertEqual(mockMapViewController.venues.first?.name, "Restaurant A")
+        XCTAssertEqual(mockMapViewController.venues.first?.location.lat, 52.36795609763071)
+        XCTAssertEqual(mockMapViewController.venues.first?.location.lng, 4.895555168247901)
+        XCTAssertEqual(mockMapViewController.venues.first?.location.address, "Nieuwe Doelenstraat 20-22")
+        XCTAssertEqual(mockMapViewController.venues[1].name, "Starbucks")
+        XCTAssertEqual(mockMapViewController.venues[1].location.lat, 52.36607678472145)
+        XCTAssertEqual(mockMapViewController.venues[1].location.lng, 4.897430803910262)
+        XCTAssertEqual(mockMapViewController.venues[1].location.address, "Utrechtsestraat 9")
     }
     
-    func testFoundPhotos() {
+    func testGetRestaurantsAroundCoordinateWithError() {
+        sut?.getRestaurantsAround(coordinate: "")
         
-        // Test
-        sut.foundPhotos(photos)
-        
-        // Verify
-        XCTAssertTrue(ui.showPhotosWasCalled)
+        XCTAssertNotNil(mockMapViewController.error)
+        XCTAssertEqual(mockMapViewController.error, .noResponse)
     }
     
-    func testOpenDetailsViewActionPresentsDetailsUI() {
+    func testGetPhotosForVenue() {
+        sut?.getPhotos(venueId: "4f019124a69d45461f2458e7")
         
-        // Test
-        sut.openDetailsView(1, photos: photos)
+        XCTAssertNotNil(mockMapViewController.venuePhotoURL)
+        XCTAssertNotNil(mockMapViewController.venueId)
         
-        // Verify
-        XCTAssertTrue(listWireframeMocked.presentFilterInterfaceWasCalled)
-    }   
+        XCTAssertEqual(mockMapViewController.venuePhotoURL, "https://fastly.4sqi.net/img/general/700x500/WfIypTz_PxPvh75QSIBwomCu-jK_72UDiBauHc6L1dU.jpg")
+    }
+    
+    func testIsDetailsModulePushedInNavigationController() {
+        sut?.showDetailsViewController(venue: mockVenue, venuePhotoURL: "")
+        
+        XCTAssertTrue(mockRouter.didGoToDetailsModule)
+    }
 }
 
+private class MockMapViewController: UIViewController, MapViewable {
+    var locationViewModel: MapViewController.LocationViewModel!
+    var venues: [Venue]!
+    var error: FoursquareError!
+    var venuePhotoURL: String!
+    var venueId: String!
+    
+    func update(_ model: [Venue]) {
+        venues = model
+    }
+    
+    func showError(error: FoursquareError) {
+        self.error = error
+    }
+    
+    func update(with photo: String, for venueId: String) {
+        venuePhotoURL = photo
+        self.venueId = venueId
+    }
+    
+    func updateUserLocation(_ locationViewModel: MapViewController.LocationViewModel) {
+        self.locationViewModel = locationViewModel
+    }
+}
+
+private class MockMapInteractor: MapInteracting {
+    func getRestaurantsAround(coordinate: String, completion: @escaping ([Venue]?, FoursquareError?) -> Void) {
+        if !coordinate.isEmpty {
+            let mockVenue1 = Venue(id: "123", name: "Restaurant A", contact: nil, location: Location(lat: 52.36795609763071, lng: 4.895555168247901, address: "Nieuwe Doelenstraat 20-22", crossStreet: nil, distance: nil, postalCode: "1012 CP", cc: nil, city: "Amsterdam", state: "North Holland", country: "Netherlands"), categories: [Category(id: "4bf58dd8d48988d16d941735", name: "Café", pluralName: "Cafés", shortName: "Café", icon: Category.Icon(prefix: "https://fastly.4sqi.net/img/general/", suffix: "/WfIypTz_PxPvh75QSIBwomCu-jK_72UDiBauHc6L1dU.jpg"), primary: nil)], verified: false, url: nil, stats: nil, likes: nil, rating: nil, hours: nil, photos: nil, tips: nil)
+            
+            let mockVenue2 = Venue(id: "4f019124a69d45461f2458e7", name: "Starbucks", contact: nil, location: Location(lat: 52.36607678472145, lng: 4.897430803910262, address: "Utrechtsestraat 9", crossStreet: nil, distance: nil, postalCode: "1017 CV", cc: nil, city: "Amsterdam", state: "North Holland", country: "Netherlands"), categories: [Category(id: "4bf58dd8d48988d16d941735", name: "Coffee Shops", pluralName: "Coffee Shops", shortName: "Coffee Shops", icon: Category.Icon(prefix: "https://ss3.4sqi.net/img/categories_v2/food/coffeeshop_", suffix: ".png"), primary: nil)], verified: false, url: nil, stats: nil, likes: nil, rating: nil, hours: nil, photos: nil, tips: nil)
+            completion([mockVenue1, mockVenue2], nil)
+        } else {
+            completion(nil, .noResponse)
+        }
+    }
+    
+    func getVenuePhotos(venueId: String, completion: @escaping ([Photo]) -> Void) {
+        let photo1 = Photo(id: "4fe03279e4b0690a86767319", prefix: "https://fastly.4sqi.net/img/general/", suffix: "/WfIypTz_PxPvh75QSIBwomCu-jK_72UDiBauHc6L1dU.jpg", width: 720, height: 540, visibility: "public", source: Source(name: "Foursquare for iOS", url: "https://foursquare.com/download/#/iphone"))
+        let photo2 = Photo(id: "51dbe1e9498e361de7fccbb7", prefix: "https://fastly.4sqi.net/img/general/", suffix: "/9664729_cr9GMPE2yxpPO_e4CFx5xtyNdjWqNQa06SZBO3aFbio.jpg", width: 720, height: 720, visibility: "public", source: Source(name: "Foursquare for iOS", url: "https://foursquare.com/download/#/iphone"))
+        completion([photo1, photo2])
+    }
+    
+    func determineUserLocation(completion: @escaping UserLocationBlock) {
+        completion(Location(lat: 52.36795609763071, lng: 4.895555168247901, address: "Nieuwe Doelenstraat 20-22", crossStreet: nil, distance: nil, postalCode: nil, cc: nil, city: nil, state: nil, country: nil))
+    }
+}
+
+private class MockRouter: MapRoutable {
+    var didGoToDetailsModule = false
+    func navigateToDetailsModule(navController: NavigationControlling?, venue: Venue, venuePhotoURL: String?) {
+        didGoToDetailsModule = true
+    }
+}
 ```
